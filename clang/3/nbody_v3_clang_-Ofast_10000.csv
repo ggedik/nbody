@@ -1,0 +1,6 @@
+
+[1mTotal memory size:[0m 240000 B, 234 KiB, 0 MiB
+
+[1m Step    Time, s Interact/s  GFLOP/s[0m
+    0  1.464e-01  6.830e+08     15.7 *
+    1  1.471e-01  6.796e+08     15.6 *
