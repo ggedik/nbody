@@ -98,7 +98,7 @@ void move_particles( particle_t p, const f32 dt, u64 n){
 	      const f32 dy  = p.y[j] - p.y[i]; //2 (sub)
 	      const f32 dz  = p.z[j] - p.z[i]; //3 (sub)
 	      const f32 d_2 = (dx * dx) + (dy * dy) + (dz * dz) + softening; //9 (mul, add)
-	      const f32 d_3_over_2 = pow(d_2, 3.0 / 2.0); //11 (pow, div) //WHY??? 3/2
+	      const f32 d_3_over_2 = pow(d_2, 3.0 / 2.0); //11 (pow, div) 
                                                     //supposed to be euclidian distance right? why it's not root to cube?
 
         //div = 1 /d_3_over_2; //force it to use fma ports with 
@@ -123,10 +123,13 @@ void move_particles( particle_t p, const f32 dt, u64 n){
            __m256 d22 = _mm256_add_ps(d2x, d2y);
                   d22 = _mm256_add_ps(d22,d2z);
                   d22 = _mm256_add_ps(d22, soft);
-           __m256 d3o2 =_mm256_set1_ps(1);
-           // _mm256_mul_ps(d22,d22); WHY THIS DOESNT WORK HOFFF SABIR YA SABIR
-               d3o2 = _mm256_mul_ps(d22,d3o2);
-                d3o2 = _mm256_rsqrt_ps(d3o2);
+                  d22 = _mm256_rsqrt_ps(d22); //why it works here 
+               // d3o2 = _mm256_div_ps(bir, d
+           //__m256 d3o2 =_mm256_set1_ps(1);
+           // 
+           __m256 d3o2 =_mm256_mul_ps(d22,d22);// WHY THIS DOESNT WORK HOFFF SABIR YA SABIR
+               d3o2 = _mm256_mul_ps(d22,d3o2); 
+                //d3o2 = _mm256_rsqrt_ps(d3o2);//but not here ??? HOW COME AND WHY AND THIS COST ME DAYS PROBABLY SAME MISTAKE WITH ASSEMBLY TOO BUT WHY 
                // d3o2 = _mm256_div_ps(bir, d3o2);
 //
            fxx = _mm256_fmadd_ps(dxx, d3o2, fxx);
